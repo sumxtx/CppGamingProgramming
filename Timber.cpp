@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <sstream>
 #include <SFML/Graphics.hpp>
 
 using namespace sf;
@@ -12,13 +13,50 @@ int main()
   int win_size_y = 1080;
   VideoMode vm(win_size_x, win_size_y);
 
-  RenderWindow window(vm, app_name, Style::Fullscreen);
+  /* Setting the Font configuration */
+  std::string fontPath = "fonts/KOMIKAP_.ttf";
+  Font font;
+  font.loadFromFile(fontPath);
   
+  /* Start Game Message */
+  std::string textStartText = "Press Enter To Start";
+  Text startText;
+  startText.setFont(font);
+  startText.setString(textStartText);
+  startText.setCharacterSize(75);
+  startText.setFillColor(Color::White);
+
+  FloatRect startTextRect = startText.getLocalBounds();
+  startText.setOrigin(
+      startTextRect.left + 
+      startTextRect.width /2.0f,
+      startTextRect.top + 
+      startTextRect.height / 2.0f);
+
+  startText.setPosition(1920 / 2.0f, 1080 / 2.0f);
+
+
+  /* Score Message */
+  int score = 0;
+  Text scoreText;
+  scoreText.setFont(font);
+  scoreText.setString("Score = 0");
+  scoreText.setCharacterSize(100);
+  scoreText.setFillColor(Color::White);
+  scoreText.setPosition(20,20);
+
+  RenderWindow window(vm, app_name, Style::Fullscreen);
+
+  /* Setting the player Data */
+  std::string playerName = "Player1";
+  std::string message = "Welcome to the game" + playerName + "!";
+  std::cout << message << std::endl;
+
   /* Create the Texture background set Texture to an Sprite */
   Texture textureBG;
   std::string backgroundTexturePath = "graphics/background.png";
   textureBG.loadFromFile(backgroundTexturePath);
-  
+
   Sprite spriteBG;
   spriteBG.setTexture(textureBG);
 
@@ -81,6 +119,9 @@ int main()
   bool paused = true;
 
 
+
+
+
   while(window.isOpen())
   {
     if(Keyboard::isKeyPressed(Keyboard::Escape))
@@ -93,90 +134,98 @@ int main()
       paused = false;
     }
 
-    Time dt = clock.restart();
-
-    if(!beeActive)
+    if(!paused)
     {
 
-      srand((int)time(0));
-      beeSpeed = (rand() % 200) + 200;
+      Time dt = clock.restart();
 
-      srand((int)time(0) * 10);
-      float height = (rand() % 500) + 500;
-      spriteBee.setPosition(2000, height);
-      beeActive = true;
-    }
-    else
-    {
-      spriteBee.setPosition(
-          spriteBee.getPosition().x - (beeSpeed * dt.asSeconds()),
-          spriteBee.getPosition().y );
-      if (spriteBee.getPosition().x < -100)
+      if(!beeActive)
       {
-        beeActive = false;
-      }
-    }
 
-    if(!cloud1Active)
-    {
-      srand((int)time(0) * 10);
-      cloud1Speed = (rand() % 200);
-      srand((int)time(0) * 10);
-      float height = (rand() % 150);
-      spriteCloud1.setPosition(-200, height);
-      cloud1Active = true;
-    }
-    else
-    {
-      spriteCloud1.setPosition(
-          spriteCloud1.getPosition().x + (cloud1Speed * dt.asSeconds()),
-          spriteCloud1.getPosition().y);
-      if (spriteCloud1.getPosition().x > 1920)
+        srand((int)time(0));
+        beeSpeed = (rand() % 200) + 200;
+
+        srand((int)time(0) * 10);
+        float height = (rand() % 500) + 500;
+        spriteBee.setPosition(2000, height);
+        beeActive = true;
+      }
+      else
       {
-        cloud1Active = false;
+        spriteBee.setPosition(
+            spriteBee.getPosition().x - (beeSpeed * dt.asSeconds()),
+            spriteBee.getPosition().y );
+        if (spriteBee.getPosition().x < -100)
+        {
+          beeActive = false;
+        }
       }
-    }
 
-    if(!cloud2Active)
-    {
-      srand((int)time(0) * 20);
-      cloud2Speed = (rand() % 200);
-      srand((int)time(0) * 20);
-      float height = (rand() % 150);
-      spriteCloud2.setPosition(-200, height);
-      cloud2Active = true;
-    }
-    else
-    {
-      spriteCloud2.setPosition(
-          spriteCloud2.getPosition().x + (cloud2Speed * dt.asSeconds()),
-          spriteCloud2.getPosition().y);
-      if (spriteCloud2.getPosition().x > 1920)
+      if(!cloud1Active)
       {
-        cloud2Active = false;
+        srand((int)time(0) * 10);
+        cloud1Speed = (rand() % 200);
+        srand((int)time(0) * 10);
+        float height = (rand() % 150);
+        spriteCloud1.setPosition(-200, height);
+        cloud1Active = true;
       }
-    }
-
-    if(!cloud3Active)
-    {
-      srand((int)time(0) * 30);
-      cloud3Speed = (rand() % 200);
-      srand((int)time(0) * 30);
-      float height = (rand() % 150);
-      spriteCloud3.setPosition(-200, height);
-      cloud3Active = true;
-    }
-    else
-    {
-      spriteCloud3.setPosition(
-          spriteCloud3.getPosition().x + (cloud3Speed * dt.asSeconds()),
-          spriteCloud3.getPosition().y);
-      if (spriteCloud3.getPosition().x > 1920)
+      else
       {
-        cloud3Active = false;
+        spriteCloud1.setPosition(
+            spriteCloud1.getPosition().x + (cloud1Speed * dt.asSeconds()),
+            spriteCloud1.getPosition().y);
+        if (spriteCloud1.getPosition().x > 1920)
+        {
+          cloud1Active = false;
+        }
       }
-    }
 
+      if(!cloud2Active)
+      {
+        srand((int)time(0) * 20);
+        cloud2Speed = (rand() % 200);
+        srand((int)time(0) * 20);
+        float height = (rand() % 150);
+        spriteCloud2.setPosition(-200, height);
+        cloud2Active = true;
+      }
+      else
+      {
+        spriteCloud2.setPosition(
+            spriteCloud2.getPosition().x + (cloud2Speed * dt.asSeconds()),
+            spriteCloud2.getPosition().y);
+        if (spriteCloud2.getPosition().x > 1920)
+        {
+          cloud2Active = false;
+        }
+      }
+
+      if(!cloud3Active)
+      {
+        srand((int)time(0) * 30);
+        cloud3Speed = (rand() % 200);
+        srand((int)time(0) * 30);
+        float height = (rand() % 150);
+        spriteCloud3.setPosition(-200, height);
+        cloud3Active = true;
+      }
+      else
+      {
+        spriteCloud3.setPosition(
+            spriteCloud3.getPosition().x + (cloud3Speed * dt.asSeconds()),
+            spriteCloud3.getPosition().y);
+        if (spriteCloud3.getPosition().x > 1920)
+        {
+          cloud3Active = false;
+        }
+      }
+
+      std::stringstream ss_score;
+      ss_score << "Score = " << score;
+      scoreText.setString(ss_score.str());
+
+    } // End if(!paused)
     window.clear();
 
     window.draw(spriteBG);
@@ -185,6 +234,12 @@ int main()
     window.draw(spriteCloud3);
     window.draw(spriteTree);
     window.draw(spriteBee);
+
+    window.draw(scoreText);
+    if(paused)
+    {
+      window.draw(startText);
+    }
 
     window.display();
   }
