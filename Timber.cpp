@@ -150,13 +150,59 @@ int main()
 
   bool paused = true;
 
-  updateBranches(1);
-  updateBranches(2);
-  updateBranches(3);
-  updateBranches(4);
-  updateBranches(5);
+  /* Preparing the player Textures and Sprites */
+  Texture texturePlayer;
+  texturePlayer.loadFromFile("graphics/player.png");
+  Sprite spritePlayer;
+  spritePlayer.setTexture(texturePlayer);
+  spritePlayer.setPosition(580,720);
+
+  side playerSide = side::LEFT;
+
+  /*Prepare the Axe Texture and Sprite */
+  Texture textureAxe;
+  textureAxe.loadFromFile("graphics/axe.png");
+  Sprite spriteAxe;
+  spriteAxe.setTexture(textureAxe);
+  spriteAxe.setPosition(700, 830);
+  float axe_position_left = 700;
+  float axe_position_right = 1075;
+
+  /* Prepare the flying log */
+  Texture textureLog;
+  textureLog.loadFromFile("graphics/log.png");
+  Sprite spriteLog;
+  spriteLog.setTexture(textureLog);
+  spriteLog.setPosition(810, 720);
+
+  /* other useful Log related variables */
+  bool logActive = false;
+  float logSpeedX = 1000;
+  float logSpeedY = -1500;
+
+  bool acceptInput = false;
+
+
+  /* Prepare the GraveStone Texture and Sprite */
+  Texture textureRIP;
+  textureRIP.loadFromFile("graphics/rip.png");
+  Sprite spriteRIP;
+  spriteRIP.setTexture(textureRIP);
+  spriteRIP.setPosition(600,860);
+
+
   while(window.isOpen())
   {
+
+    Event event;
+    while(window.pollEvent(event))
+    {
+      if(event.type == Event::KeyReleased && !paused)
+      {
+        acceptInput = true;
+        spriteAxe.setPosition(2000, spriteAxe.getPosition().y);
+      }
+    }
     if(Keyboard::isKeyPressed(Keyboard::Escape))
     {
       window.close();
@@ -167,7 +213,57 @@ int main()
       paused = false;
       score = 0;
       timeRemaining = 6;
+
+      for(int i = 1; i < NUM_BRANCHES; i++)
+      {
+        branchPositions[i] = side::NONE;
+      }
+
+      spriteRIP.setPosition(675, 2000);
+      spritePlayer.setPosition(580, 720);
+
+      acceptInput = true;
+
     }
+
+    if(acceptInput)
+    {
+      if (Keyboard::isKeyPressed(Keyboard::Right))
+      {
+        playerSide = side::RIGHT;
+        score++;
+        timeRemaining += (2 / score) + .15;
+
+        spriteAxe.setPosition(axe_position_right, spriteAxe.getPosition().y);
+
+        spritePlayer.setPosition(1200, 720);
+
+        updateBranches(score);
+
+        spriteLog.setPosition(810, 720);
+        logSpeedX = -5000;
+        logActive = true;
+
+        acceptInput = false;
+      }
+
+      if (Keyboard::isKeyPressed(Keyboard::Left))
+      {
+        playerSide = side::LEFT;
+        score++;
+        timeRemaining += (2/score) + .15;
+        spriteAxe.setPosition(axe_position_left, spriteAxe.getPosition().y);
+        spritePlayer.setPosition(580, 720);
+        updateBranches(score);
+        spriteLog.setPosition(810, 720);
+        logSpeedX = 5000;
+        logActive = true;
+        acceptInput = false;
+      }
+    }
+
+
+
 
     if(!paused)
     {
@@ -308,6 +404,10 @@ int main()
     }
 
     window.draw(spriteTree);
+    window.draw(spritePlayer);
+    window.draw(spriteAxe);
+    window.draw(spriteLog);
+    window.draw(spriteRIP);
     window.draw(spriteBee);
 
     window.draw(scoreText);
