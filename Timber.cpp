@@ -114,13 +114,22 @@ int main()
   float cloud3Speed = 0.0f;
 
 
+  /* Creates the clock object */
   Clock clock;
 
+  /* Create the time remaining Bar */
+  RectangleShape timeBar;
+  float timeBarStartWidth = 400;
+  float timeBarHeight = 80;
+  timeBar.setSize(Vector2f(timeBarStartWidth, timeBarHeight));
+  timeBar.setFillColor(Color::Red);
+  timeBar.setPosition((1920 / 2) - timeBarStartWidth / 2, 980);
+
+  Time gameTimeTotal;
+  float timeRemaining = 6.0f;
+  float timeBarWidthPerSecond = timeBarStartWidth / timeRemaining;
+
   bool paused = true;
-
-
-
-
 
   while(window.isOpen())
   {
@@ -132,6 +141,8 @@ int main()
     if(Keyboard::isKeyPressed(Keyboard::Return))
     {
       paused = false;
+      score = 0;
+      timeRemaining = 6;
     }
 
     if(!paused)
@@ -139,10 +150,24 @@ int main()
 
       Time dt = clock.restart();
 
+      timeRemaining -= dt.asSeconds();
+      timeBar.setSize(Vector2f(timeBarWidthPerSecond * timeRemaining, timeBarHeight));
+
+      if(timeRemaining <= 0.0f)
+      {
+        paused = true;
+
+        startText.setString("Out of time!");
+
+        FloatRect textRect = startText.getLocalBounds();
+        startText.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
+        startText.setPosition(1920 / 2.0f, 1080 /2.0f);
+      }
+
       if(!beeActive)
       {
 
-        srand((int)time(0));
+        srand((int)time(0) * 10);
         beeSpeed = (rand() % 200) + 200;
 
         srand((int)time(0) * 10);
@@ -236,6 +261,7 @@ int main()
     window.draw(spriteBee);
 
     window.draw(scoreText);
+    window.draw(timeBar);
     if(paused)
     {
       window.draw(startText);
