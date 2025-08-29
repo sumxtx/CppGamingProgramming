@@ -2,6 +2,7 @@
 #include <string>
 #include <sstream>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 using namespace sf;
 
@@ -27,7 +28,7 @@ int main()
   std::string fontPath = "fonts/KOMIKAP_.ttf";
   Font font;
   font.loadFromFile(fontPath);
-  
+
   /* Start Game Message */
   std::string textStartText = "Press Enter To Start";
   Text startText;
@@ -182,6 +183,21 @@ int main()
 
   bool acceptInput = false;
 
+  SoundBuffer chopBuffer;
+  chopBuffer.loadFromFile("sound/chop.wav");
+  Sound chop;
+  chop.setBuffer(chopBuffer);
+
+  SoundBuffer deathBuffer;
+  deathBuffer.loadFromFile("sound/death.wav");
+  Sound death;
+  death.setBuffer(deathBuffer);
+
+  SoundBuffer ootBuffer;
+  ootBuffer.loadFromFile("sound/out_of_time.wav");
+  Sound outOfTime;
+  outOfTime.setBuffer(ootBuffer);
+  
 
   /* Prepare the GraveStone Texture and Sprite */
   Texture textureRIP;
@@ -245,6 +261,8 @@ int main()
         logActive = true;
 
         acceptInput = false;
+
+        chop.play();
       }
 
       if (Keyboard::isKeyPressed(Keyboard::Left))
@@ -282,6 +300,8 @@ int main()
         FloatRect textRect = startText.getLocalBounds();
         startText.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
         startText.setPosition(1920 / 2.0f, 1080 /2.0f);
+
+        outOfTime.play();
       }
 
       if(!beeActive)
@@ -389,6 +409,39 @@ int main()
           branches[i].setPosition(3000, height);
         }
       }
+      if(logActive)
+      {
+        spriteLog.setPosition(
+            spriteLog.getPosition().x + (logSpeedX * dt.asSeconds()),
+            spriteLog.getPosition().y + (logSpeedY * dt.asSeconds()));
+
+        if (spriteLog.getPosition().x < -100 || 
+            spriteLog.getPosition().x > 2000)
+        {
+          logActive = false;
+          spriteLog.setPosition(810, 720);
+        }
+      }
+
+      if (branchPositions[5] == playerSide)
+      {
+        paused = true;
+        acceptInput = false;
+
+        spriteRIP.setPosition(525, 760);
+        spritePlayer.setPosition(2000, 660);
+        startText.setString("SQUISHED");
+
+        FloatRect textRect = startText.getLocalBounds();
+
+        startText.setOrigin(
+            textRect.left + textRect.width / 2.0f, 
+            textRect.top + textRect.height / 2.0f);
+        startText.setPosition(1920 / 2.0f, 1080 / 2.0f);
+
+        death.play();
+      }
+
 
     } // End if(!paused)
     window.clear();
