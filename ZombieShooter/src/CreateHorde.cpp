@@ -1,5 +1,6 @@
 #include "ZombieArena.hpp"
 #include "Zombie.hpp"
+#include <iostream>
 
 Zombie* createHorde(int numZombies, IntRect arena)
 {
@@ -20,15 +21,15 @@ Zombie* createHorde(int numZombies, IntRect arena)
         x = minX;
         y = (rand() % maxY) + minY;
         break;
-      case1:
+      case 1:
         x = maxX;
         y = (rand() % maxY) + minY;
         break;
-      case2:
+      case 2:
         x = (rand() % maxX) + minX;
         y = minY;
         break;
-      case3:
+      case 3:
         x = (rand() % maxX) + minX;
         y = maxY;
         break;
@@ -36,6 +37,7 @@ Zombie* createHorde(int numZombies, IntRect arena)
     srand((int)time(0) * i * 2);
     int type = (rand() % 3);
     zombies[i].spawn(x, y, type, i);
+    std::cout << "Zombie Location " << x << " " << y << " " << std::endl;
   }
   return zombies;
 }

@@ -1,6 +1,7 @@
 #include <cmath>
 #include "Zombie.hpp"
 #include "TextureHolder.hpp"
+#include <iostream>
 
 #include <cstdlib>
 #include <ctime>
@@ -31,6 +32,7 @@ void Zombie::spawn(float startX, float startY, int type, int seed)
   float modifier = (rand()%MAX_VARRIANCE) + OFFSET;
   modifier /= 100;
   m_Speed *= modifier;
+  std::cout << "modifier" << modifier << std::endl;
 
   m_Position.x = startX;
   m_Position.y = startY;
@@ -86,6 +88,6 @@ void Zombie::update(float elapsedTime, Vector2f playerLocation)
     m_Position.y = m_Position.y - m_Speed * elapsedTime;
   }
   m_Sprite.setPosition(m_Position);
-  float angle = (atan2(playerY - m_Position.y, playerX - m_Position.x) * 180 / 3.141);
+  float angle = (atan2(playerY - m_Position.y, playerX - m_Position.x) * 180) / 3.141;
   m_Sprite.setRotation(angle);
 }

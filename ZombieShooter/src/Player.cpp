@@ -1,4 +1,5 @@
 #include "Player.hpp"
+#include "TextureHolder.hpp"
 #include <cmath>
 
 Player::Player():
@@ -8,8 +9,7 @@ Player::Player():
   m_Texture(),
   m_Sprite()
 {
-  m_Texture.loadFromFile("graphics/player.png");
-  m_Sprite.setTexture(m_Texture);
+  m_Sprite = Sprite(TextureHolder::GetTexture("graphics/player.png"));
   m_Sprite.setOrigin(25,25);
 }
 

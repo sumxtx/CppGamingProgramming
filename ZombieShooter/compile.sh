@@ -15,20 +15,25 @@
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:../../SFML-2.6.0/lib
 #
 g++ -c\
-   Player.cpp\
-   CreateBackground.cpp\
-   ZombieArena.cpp\
-   Zombie.cpp\
-   TextureHolder.cpp\
-   CreateHorde.cpp\
-    -I../../SFML-2.6.0/include -I.
+   ./src/Player.cpp\
+   ./src/CreateBackground.cpp\
+   ./src/ZombieArena.cpp\
+   ./src/Zombie.cpp\
+   ./src/TextureHolder.cpp\
+   ./src/CreateHorde.cpp\
+   ./src/Bullet.cpp\
+   ./src/Pickup.cpp\
+    -I../../SFML-2.6.0/include -I./include
+mv *.o ./obj/
 g++ \
-    Player.o\
-    CreateBackground.o\
-    ZombieArena.o\
-    Zombie.o\
-    TextureHolder.o\
-    CreateHorde.o\
+    ./obj/Player.o\
+    ./obj/CreateBackground.o\
+    ./obj/ZombieArena.o\
+    ./obj/Zombie.o\
+    ./obj/TextureHolder.o\
+    ./obj/CreateHorde.o\
+    ./obj/Bullet.o\
+    ./obj/Pickup.o\
      -o ZombieArena -L../../SFML-2.6.0/lib -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio ../../SFML-2.6.0/lib/libFLAC.so.12
 
 
