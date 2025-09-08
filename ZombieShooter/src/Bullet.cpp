@@ -2,7 +2,7 @@
 
 Bullet::Bullet()
 {
-  m_BulletShape.setSize(sf::Vector2f(15,15));
+  m_BulletShape.setSize(sf::Vector2f(5,5));
 }
 
 void Bullet::shoot(float startX, float startY, float targetX, float targetY)

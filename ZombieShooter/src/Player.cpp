@@ -117,7 +117,7 @@ void Player::stopDown()
   m_DownPressed = false;
 }
 
-void Player::update(float elapsedTime, Vector2i mousePosition)
+void Player::update(float elapsedTime, Vector2f mousePosition)
 {
   if(m_UpPressed)
   {
@@ -154,9 +154,7 @@ void Player::update(float elapsedTime, Vector2i mousePosition)
     m_Position.y = m_Arena.top + m_TileSize;
   }
   float angle = (
-      std::atan2(
-        mousePosition.y - m_Resolution.y / 2, mousePosition.x - m_Resolution.x / 2
-        ) * 180)/ 3.141;
+      std::atan2(mousePosition.y - m_Position.y, mousePosition.x - m_Position.x) * 180) / 3.141f;
   m_Sprite.setRotation(angle);
 
 }
@@ -176,49 +174,3 @@ void Player::increaseHealthLevel(int amount)
     m_Health = m_MaxHealth;
   }
 }
-
-/*
-   Vector2f m_Position;
-   Sprite m_Sprite;
-   Texture m_Texture;
-   Vector2f m_Resolution;
-   IntRect m_Arena;
-
-   int m_TileSize;
-   bool m_UpPressed;
-   bool m_DownPressed;
-   bool m_LeftPressed;
-   bool m_RightPressed;
-   int m_Health;
-   int m_MaxHealth;
-   Time m_LastHit;
-   float m_Speed;
-
-   public:
-   Player();
-   void spawn(IntRect arena, Vector2f resolution, int tileSize);
-   void resetPlayerStats();
-   bool hit(Time timeHit);
-   Time getLastHitTime();
-
-   FloatRect getPosition();
-   Vector2f getCenter();
-   float getRotation();
-   Sprite getSprite();
-
-   void moveLeft();
-   void moveRight();
-   void moveUp();
-   void moveDown();
-
-   void stopLeft();
-   void stopRight();
-   void stopUp();
-   void stopDown();
-
-   void update(float elapsedTime, Vector2i mousePosition);
-   void upgradeSpeed();
-   void upgradeHealth();
-   void increaseHealthLevel(int amount);
-   int getHealth();
-   */

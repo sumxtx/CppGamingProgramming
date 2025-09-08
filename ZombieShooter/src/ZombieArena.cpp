@@ -397,8 +397,17 @@ int main()
         wave++;
 
         /* Create the Arena and place the player on it's center */
-        arena.width = 500 * wave;
-        arena.height = 500 * wave;
+        /* Max arena size, to avoid expanding forever */
+        if (wave <= 6) 
+        {
+          arena.width = 500 * wave;
+          arena.height = 500 * wave;
+        }
+        else
+        {
+          arena.width = 500 * 6;
+          arena.height = 500 * 6;
+        }
         arena.left = 0;
         arena.top = 0;
         int tileSize = createBackground(background, arena);
@@ -434,16 +443,16 @@ int main()
       float dtAsSeconds = dt.asSeconds();
 
       /* Get Mouse Pointer */
-      mouseScreenPosition = Mouse::getPosition();
+      mouseScreenPosition = Mouse::getPosition(window);
 
       /* Convert mouse position to world coordinate position */
-      mouseWorldPosition = window.mapPixelToCoords(Mouse::getPosition(), mainView);
+      mouseWorldPosition = window.mapPixelToCoords(Mouse::getPosition(window), mainView);
 
       /* Set Crosshair to world position */
       spriteCrosshair.setPosition(mouseWorldPosition);
 
       /* Update the player pointing and locatio postions */
-      player.update(dtAsSeconds, Mouse::getPosition());
+      player.update(dtAsSeconds, mouseWorldPosition);
       Vector2f playerPosition(player.getCenter());
       mainView.setCenter(player.getCenter());
 

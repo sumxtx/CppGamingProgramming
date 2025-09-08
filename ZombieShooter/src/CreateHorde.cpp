@@ -5,10 +5,10 @@
 Zombie* createHorde(int numZombies, IntRect arena)
 {
   Zombie* zombies = new Zombie[numZombies];
-  int maxY = arena.height - 50;
-  int minY = arena.top + 50;
-  int maxX = arena.width - 50;
-  int minX = arena.left + 50;
+  int maxY = arena.height - 60;
+  int minY = arena.top + 60;
+  int maxX = arena.width - 60;
+  int minX = arena.left + 60;
 
   for(int i = 0; i < numZombies; i++)
   {

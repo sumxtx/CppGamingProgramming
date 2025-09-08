@@ -48,7 +48,7 @@ class Player
     void stopUp();
     void stopDown();
 
-    void update(float elapsedTime, Vector2i mousePosition);
+    void update(float elapsedTime, Vector2f mousePosition);
     void upgradeSpeed();
     void upgradeHealth();
     void increaseHealthLevel(int amount);

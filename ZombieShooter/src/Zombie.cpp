@@ -22,7 +22,7 @@ void Zombie::spawn(float startX, float startY, int type, int seed)
       m_Speed = CHASER_SPEED;
       m_Health = CHASER_HEALTH;
       break;
-    case2:
+    case 2:
       m_Sprite = Sprite(TextureHolder::GetTexture("graphics/crawler.png"));
       m_Speed = CRAWLER_SPEED;
       m_Health = CRAWLER_HEALTH;
@@ -32,12 +32,12 @@ void Zombie::spawn(float startX, float startY, int type, int seed)
   float modifier = (rand()%MAX_VARRIANCE) + OFFSET;
   modifier /= 100;
   m_Speed *= modifier;
-  std::cout << "modifier" << modifier << std::endl;
 
   m_Position.x = startX;
   m_Position.y = startY;
   m_Sprite.setOrigin(25,25);
   m_Sprite.setPosition(m_Position);
+  m_Alive = true;
 }
 
 bool Zombie::hit()
