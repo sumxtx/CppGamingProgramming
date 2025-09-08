@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include "ZombieArena.hpp"
 #include "Player.hpp"
 #include "TextureHolder.hpp"
@@ -26,7 +27,7 @@ int main()
 
   /* Initial Game State */
   State state = State::GAME_OVER;
-  
+
   /* Screen resolution and SFML Window */
   Vector2f resolution;
   resolution.x = VideoMode::getDesktopMode().width;
@@ -35,7 +36,7 @@ int main()
 
   /* SFML View for the main action*/
   View mainView(sf::FloatRect(0, 0, resolution.x, resolution.y));
-  
+
   /* Main Clock */
   Clock clock;
 
@@ -46,7 +47,7 @@ int main()
   Vector2f mouseWorldPosition;
   /* Mouse in relation to the screen */
   Vector2i mouseScreenPosition;
-  
+
   /* Instance of the Player Class */
   Player player;
 
@@ -77,11 +78,11 @@ int main()
   Texture textureCrosshair = TextureHolder::GetTexture("graphics/crosshair.png");
   spriteCrosshair.setTexture(textureCrosshair);
   spriteCrosshair.setOrigin(25,25);
-  
+
   /* Health and Ammo pickups */ //TODO: Maybe add an armor pickup
   Pickup healthPickup(1);
   Pickup ammoPickup(2);
-  
+
   /* Score */
   int score = 0;
   int hiScore = 0;
@@ -91,7 +92,7 @@ int main()
   Texture textureGameOver = TextureHolder::GetTexture("graphics/background.png");
   spriteGameOver.setTexture(textureGameOver);
   spriteGameOver.setPosition(0,0);
-  
+
   /* Hud superpositioned View */
   View hudView(sf::FloatRect(0,0,1920,1080));
 
@@ -104,7 +105,7 @@ int main()
   /* Font */
   Font font;
   font.loadFromFile("fonts/zombiecontrol.ttf");
-  
+
   /* Game Paused Text */
   Text pausedText;
   pausedText.setFont(font);
@@ -136,7 +137,7 @@ int main()
     "5 - More and better health pickups\n" <<
     "6 - More and better ammo pickups";
   levelUpText.setString(levelUpStream.str());
-  
+
   /* Ammo Text */
   Text ammoText;
   ammoText.setFont(font);
@@ -151,6 +152,12 @@ int main()
   scoreText.setFillColor(Color::White);
   scoreText.setPosition(20,0);
 
+  std::ifstream inputFile("gamedata/scores.txt");
+  if(inputFile.is_open())
+  {
+    inputFile >> hiScore;
+    inputFile.close();
+  }
 
   /* High Score Teext */
   Text hiScoreText;
@@ -188,8 +195,44 @@ int main()
   int framesSinceLastHUDUpdate = 0;
   int fpsMeasurementFrameInterval = 1000;
 
+  /* Sounds */
+  SoundBuffer hitBuffer;
+  hitBuffer.loadFromFile("sound/hit.wav");
+  Sound hit;
+  hit.setBuffer(hitBuffer);
+
+  SoundBuffer splatBuffer;
+  splatBuffer.loadFromFile("sound/splat.wav");
+  Sound splat;
+  splat.setBuffer(splatBuffer);
+
+  SoundBuffer shootBuffer;
+  shootBuffer.loadFromFile("sound/shoot.wav");
+  Sound shoot;
+  shoot.setBuffer(shootBuffer);
+
+  SoundBuffer reloadBuffer;
+  reloadBuffer.loadFromFile("sound/reload.wav");
+  Sound reload;
+  reload.setBuffer(reloadBuffer);
+
+  SoundBuffer reloadFailedBuffer;
+  reloadFailedBuffer.loadFromFile("sound/reload_failed.wav");
+  Sound reloadFailed;
+  reloadFailed.setBuffer(reloadFailedBuffer);
+
+  SoundBuffer powerupBuffer;
+  powerupBuffer.loadFromFile("sound/powerup.wav");
+  Sound powerup;
+  powerup.setBuffer(powerupBuffer);
+  SoundBuffer pickupBuffer;
+  pickupBuffer.loadFromFile("sound/pickup.wav");
+  Sound pickup;
+  pickup.setBuffer(pickupBuffer);
+
 
   /** Main Game Loop **/
+  int upAtBegin = 0;
 
   while(window.isOpen())
   {
@@ -200,7 +243,7 @@ int main()
       /* Handle Keys being Pressed */
       if(event.type == Event::KeyPressed)
       {
-        /* Game Flow (Pause, Continue, New Game */
+        /* Game Flow (Pause, Continue, New Game) */
         /* Enter Key Pauses the game */
         if(event.key.code == Keyboard::Return && state == State::PLAYING)
         {
@@ -216,6 +259,15 @@ int main()
         else if(event.key.code == Keyboard::Return && state == State::GAME_OVER)
         {
           state = State::LEVELING_UP;
+
+          wave = 0;
+          score = 0;
+          currentBullet = 0;
+          bulletsSpare = 24;
+          bulletsInClip = 6;
+          clipSize = 6;
+          fireRate = 1;
+          player.resetPlayerStats();
         }
 
         /* Game is Running */
@@ -227,15 +279,18 @@ int main()
             {
               bulletsInClip = clipSize;
               bulletsSpare -= clipSize;
+              reload.play();
             }
             else if(bulletsSpare > 0)
             {
               bulletsInClip = bulletsSpare;
               bulletsSpare = 0;
+              reload.play();
             }
             else
             {
-              //
+              // No Ammo
+              reloadFailed.play();
             }
           }
         }
@@ -296,6 +351,7 @@ int main()
             currentBullet = 0;
           }
           lastPressed = gameTimeTotal;
+          shoot.play();
           bulletsInClip--;
         }
       }
@@ -306,26 +362,43 @@ int main()
     {
       if(event.key.code == Keyboard::Num1)
       {
+        fireRate++;
         state = State::PLAYING;
       }
       if(event.key.code == Keyboard::Num2)
       {
+        clipSize += clipSize;
         state = State::PLAYING;
       }
       if(event.key.code == Keyboard::Num3)
       {
+        player.upgradeHealth();
         state = State::PLAYING;
       }
       if(event.key.code == Keyboard::Num4)
       {
+        player.upgradeSpeed();
+        state = State::PLAYING;
+      }
+      if(event.key.code == Keyboard::Num5)
+      {
+        healthPickup.upgrade();
+        state = State::PLAYING;
+      }
+      if(event.key.code == Keyboard::Num6)
+      {
+        ammoPickup.upgrade();
         state = State::PLAYING;
       }
 
       if(state == State::PLAYING)
       {
+
+        wave++;
+
         /* Create the Arena and place the player on it's center */
-        arena.width = 1200;
-        arena.height = 1200;
+        arena.width = 500 * wave;
+        arena.height = 500 * wave;
         arena.left = 0;
         arena.top = 0;
         int tileSize = createBackground(background, arena);
@@ -336,11 +409,13 @@ int main()
         ammoPickup.setArena(arena);
 
         /* Prepare the Zombies Spawn */
-        numZombies = 10;
+        numZombies = 5 * wave;
         /*deletes previously allocated zombies */
         delete[] zombies;
         zombies = createHorde(numZombies, arena);
         numZombiesAlive = numZombies;
+
+        powerup.play();
 
         /* Avoid fram jump */
         clock.restart();
@@ -394,82 +469,90 @@ int main()
 
       /* Zombies Collision Detection (Zombies being shot)*/
       for(int i = 0; i < 100; i++)
+      {
+        for(int j = 0; j < numZombies; j++)
         {
-          for(int j = 0; j < numZombies; j++)
+          if(bullets[i].isInFlight() && zombies[j].isAlive())
           {
-            if(bullets[i].isInFlight() && zombies[j].isAlive())
+            if(bullets[i].getPosition().intersects(zombies[j].getPosition()))
             {
-              if(bullets[i].getPosition().intersects(zombies[j].getPosition()))
+              bullets[i].stop();
+              if(zombies[j].hit())
               {
-                bullets[i].stop();
-                if(zombies[j].hit())
+                score += 10;
+                if(score >= hiScore)
                 {
-                  score += 10;
-                  if(score >= hiScore)
-                  {
-                    hiScore = score;
-                  }
-                  numZombiesAlive--;
-                  if(numZombiesAlive == 0)
-                  {
-                    state = State::LEVELING_UP;
-                  }
+                  hiScore = score;
+                }
+                numZombiesAlive--;
+                if(numZombiesAlive == 0)
+                {
+                  state = State::LEVELING_UP;
                 }
               }
+              splat.play();
             }
           }
         }
-      
-      /* Player Collision Detection (Zombies hit the player) */
-        for(int i = 0; i < numZombies; i++)
-        {
-          if(player.getPosition().intersects(zombies[i].getPosition()) && zombies[i].isAlive())
-          {
-            if(player.hit(gameTimeTotal))
-            {
-              //
-            }
-            if(player.getHealth() <= 0)
-            {
-              state = State::GAME_OVER;
-            }
-          }
-        }
-        /* Player Pickups Detection (Player pickup either ammo or health) */
-        if(player.getPosition().intersects(healthPickup.getPosition()) && healthPickup.isSpawned())
-        {
-          player.increaseHealthLevel(healthPickup.gotIt());
-        }
-        if(player.getPosition().intersects(ammoPickup.getPosition()) && ammoPickup.isSpawned())
-        {
-          bulletsSpare += ammoPickup.gotIt();
-        }
-        
-        /* Health Bar Display */
-        healthBar.setSize(Vector2f(player.getHealth() * 3, 50));
+      }
 
-        /* Frames passed to update the HUD */
-        framesSinceLastHUDUpdate++;
-        if(framesSinceLastHUDUpdate > fpsMeasurementFrameInterval)
+      /* Player Collision Detection (Zombies hit the player) */
+      for(int i = 0; i < numZombies; i++)
+      {
+        if(player.getPosition().intersects(zombies[i].getPosition()) && zombies[i].isAlive())
         {
-          std::stringstream ssAmmo;
-          std::stringstream ssScore;
-          std::stringstream ssHiScore;
-          std::stringstream ssWave;
-          std::stringstream ssZombiesAlive;
-          
-          ssAmmo << bulletsInClip << "/" << bulletsSpare;
-          ammoText.setString(ssAmmo.str());
-          ssScore << "Score: " << score;
-          scoreText.setString(ssScore.str());
-          ssHiScore << "Hi Score: " << hiScore;
-          hiScoreText.setString(ssHiScore.str());
-          ssWave << "Wave : " << wave;
-          waveNumberText.setString(ssWave.str());
-          ssZombiesAlive << "Zombies: " << numZombiesAlive;
-          zombiesRemainingText.setString(ssZombiesAlive.str());
-          framesSinceLastHUDUpdate = 0;
+          if(player.hit(gameTimeTotal))
+          {
+            //
+            hit.play();
+          }
+          if(player.getHealth() <= 0)
+          {
+            state = State::GAME_OVER;
+            std::ofstream outputFile("gamedata/scores.txt");
+            outputFile << hiScore;
+            outputFile.close();
+            upAtBegin = 0;
+          }
         }
+      }
+      /* Player Pickups Detection (Player pickup either ammo or health) */
+      if(player.getPosition().intersects(healthPickup.getPosition()) && healthPickup.isSpawned())
+      {
+        player.increaseHealthLevel(healthPickup.gotIt());
+        pickup.play();
+      }
+      if(player.getPosition().intersects(ammoPickup.getPosition()) && ammoPickup.isSpawned())
+      {
+        bulletsSpare += ammoPickup.gotIt();
+        reload.play();
+      }
+
+      /* Health Bar Display */
+      healthBar.setSize(Vector2f(player.getHealth() * 3, 50));
+
+      /* Frames passed to update the HUD */
+      framesSinceLastHUDUpdate++;
+      if(framesSinceLastHUDUpdate > fpsMeasurementFrameInterval)
+      {
+        std::stringstream ssAmmo;
+        std::stringstream ssScore;
+        std::stringstream ssHiScore;
+        std::stringstream ssWave;
+        std::stringstream ssZombiesAlive;
+
+        ssAmmo << bulletsInClip << "/" << bulletsSpare;
+        ammoText.setString(ssAmmo.str());
+        ssScore << "Score: " << score;
+        scoreText.setString(ssScore.str());
+        ssHiScore << "Hi Score: " << hiScore;
+        hiScoreText.setString(ssHiScore.str());
+        ssWave << "Wave : " << wave;
+        waveNumberText.setString(ssWave.str());
+        ssZombiesAlive << "Zombies: " << numZombiesAlive;
+        zombiesRemainingText.setString(ssZombiesAlive.str());
+        framesSinceLastHUDUpdate = 0;
+      }
     }
 
     /* Drawn the Scene */
