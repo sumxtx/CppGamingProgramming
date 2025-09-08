@@ -8,7 +8,7 @@
 
 using namespace std;
 
-void Zombie::spawn(float startX, float startY, int type, int seed)
+void Zombie::spawn(float startX, float startY, int type, int seed, int wave)
 {
   switch(type)
   {
@@ -31,7 +31,7 @@ void Zombie::spawn(float startX, float startY, int type, int seed)
   srand((int)time(0) * seed);
   float modifier = (rand()%MAX_VARRIANCE) + OFFSET;
   modifier /= 100;
-  m_Speed *= modifier;
+  m_Speed *= (modifier + (wave / 5));
 
   m_Position.x = startX;
   m_Position.y = startY;

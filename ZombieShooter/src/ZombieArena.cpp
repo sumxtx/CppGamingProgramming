@@ -342,17 +342,24 @@ int main()
       /* Shooting */
       if(Mouse::isButtonPressed(sf::Mouse::Left))
       {
-        if(gameTimeTotal.asMilliseconds() - lastPressed.asMilliseconds() > 1000 / fireRate && bulletsInClip > 0)
+        if(gameTimeTotal.asMilliseconds() - lastPressed.asMilliseconds() > 1000 / fireRate)
         {
-          bullets[currentBullet].shoot(player.getCenter().x, player.getCenter().y, mouseWorldPosition.x, mouseWorldPosition.y);
-          currentBullet++;
-          if(currentBullet > 99)
+          if(bulletsInClip > 0)
           {
-            currentBullet = 0;
+            bullets[currentBullet].shoot(player.getCenter().x, player.getCenter().y, mouseWorldPosition.x, mouseWorldPosition.y);
+            currentBullet++;
+            if(currentBullet > 99)
+            {
+              currentBullet = 0;
+            }
+            lastPressed = gameTimeTotal;
+            shoot.play();
+            bulletsInClip--;
           }
-          lastPressed = gameTimeTotal;
-          shoot.play();
-          bulletsInClip--;
+          else
+          {
+            reload.play();
+          }
         }
       }
     }
@@ -421,7 +428,7 @@ int main()
         numZombies = 5 * wave;
         /*deletes previously allocated zombies */
         delete[] zombies;
-        zombies = createHorde(numZombies, arena);
+        zombies = createHorde(numZombies, arena, wave);
         numZombiesAlive = numZombies;
 
         powerup.play();

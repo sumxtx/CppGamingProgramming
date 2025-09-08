@@ -2,7 +2,7 @@
 #include "Zombie.hpp"
 #include <iostream>
 
-Zombie* createHorde(int numZombies, IntRect arena)
+Zombie* createHorde(int numZombies, IntRect arena, int wave)
 {
   Zombie* zombies = new Zombie[numZombies];
   int maxY = arena.height - 60;
@@ -37,7 +37,7 @@ Zombie* createHorde(int numZombies, IntRect arena)
     }
     srand((int)time(0) * i * 2);
     int type = (rand() % 3);
-    zombies[i].spawn(x, y, type, i);
+    zombies[i].spawn(x, y, type, i, wave);
     std::cout << "Zombie Location " << x << " " << y << " " << std::endl;
   }
   return zombies;
