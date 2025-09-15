@@ -25,6 +25,8 @@ g++ -c\
    ./src/PlayerUpdate.cpp\
    ./src/SoundEngine.cpp\
    ./src/Update.cpp\
+   ./src/CameraGraphics.cpp\
+   ./src/CameraUpdate.cpp\
    ./src/run.cpp\
     -I../../SFML-2.6.0/include -I./include
 mv *.o ./obj/
@@ -39,6 +41,8 @@ g++ \
    ./obj/PlayerUpdate.o\
    ./obj/SoundEngine.o\
    ./obj/Update.o\
+   ./obj/CameraGraphics.o\
+   ./obj/CameraUpdate.o\
    ./obj/run.o\
      -o EndlessRun-app -L../../SFML-2.6.0/lib -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio ../../SFML-2.6.0/lib/libFLAC.so.12
 

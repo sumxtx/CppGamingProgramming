@@ -23,8 +23,8 @@ void PlayerUpdate::assemble(shared_ptr<LevelUpdate> levelUpdate,
 {
     SoundEngine();
 
-    m_Position.width = PLAYER_WIDTH /*for test only*/ * 10;
-    m_Position.height = PLAYER_HEIGHT /*for test only */ * 10;
+    m_Position.width = PLAYER_WIDTH;
+    m_Position.height = PLAYER_HEIGHT;
     m_IsPaused = levelUpdate->getIsPausedPointer();
 }
 
