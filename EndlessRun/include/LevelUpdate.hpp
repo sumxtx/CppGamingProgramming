@@ -8,7 +8,7 @@ using namespace std;
 class LevelUpdate : public Update
 {
   private:
-    bool m_IsPaused = true;
+    bool m_IsPaused = false;
     vector <FloatRect*> m_PlatformPositions;
     float* m_CameraTime = new float;
     FloatRect* m_PlayerPosition;

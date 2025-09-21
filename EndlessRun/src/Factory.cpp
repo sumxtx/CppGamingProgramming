@@ -5,6 +5,8 @@
 #include "InputDispatcher.hpp"
 #include "CameraUpdate.hpp"
 #include "CameraGraphics.hpp"
+#include "PlatformUpdate.hpp"
+#include "PlatformGraphics.hpp"
 #include <iostream>
 
 using namespace std;
@@ -44,6 +46,31 @@ void Factory::loadLevel(vector<GameObject>& gameObjects, VertexArray& canvas, In
   gameObjects.push_back(player);
   
   levelUpdate->assemble(nullptr, playerUpdate);
+
+  //Platforms
+  for(int i = 0; i < 8; i++)
+  {
+    GameObject platform;
+    shared_ptr<PlatformUpdate> platformUpdate = make_shared<PlatformUpdate>();
+    platformUpdate->assemble(nullptr, playerUpdate);
+    platform.addComponent(platformUpdate);
+    shared_ptr<PlatformGraphics> platformGraphics = make_shared<PlatformGraphics>();
+
+  platformGraphics->assemble(
+      canvas,
+      platformUpdate,
+      IntRect(
+        PLATFORM_TEX_LEFT,
+        PLATFORM_TEX_TOP,
+        PLATFORM_TEX_WIDTH,
+        PLATFORM_TEX_HEIGHT
+        )
+      );
+  platform.addComponent(platformGraphics);
+  gameObjects.push_back(platform);
+
+  levelUpdate->addPlatformPosition(platformUpdate->getPositionPointer());
+  }
 
   //Cameras
   const float width = float(VideoMode::getDesktopMode().width);

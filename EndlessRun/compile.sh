@@ -28,6 +28,8 @@ g++ -c\
    ./src/CameraGraphics.cpp\
    ./src/CameraUpdate.cpp\
    ./src/run.cpp\
+   ./src/PlatformGraphics.cpp\
+   ./src/PlatformUpdate.cpp\
     -I../../SFML-2.6.0/include -I./include
 mv *.o ./obj/
 g++ \
@@ -44,6 +46,8 @@ g++ \
    ./obj/CameraGraphics.o\
    ./obj/CameraUpdate.o\
    ./obj/run.o\
+   ./obj/PlatformGraphics.o\
+   ./obj/PlatformUpdate.o\
      -o EndlessRun-app -L../../SFML-2.6.0/lib -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio ../../SFML-2.6.0/lib/libFLAC.so.12
 
 
