@@ -1,5 +1,8 @@
+
+*.bak
 *EndlessRun-app
 *ZombieArena
 *Bat-app
 *Timber-app
 *.o
+*.d

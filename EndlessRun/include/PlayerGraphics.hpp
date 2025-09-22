@@ -1,6 +1,7 @@
 #pragma once
 #include "Graphics.hpp"
 
+class Animator;
 class PlayerUpdate;
 
 class PlayerGraphics : public Graphics
@@ -8,6 +9,8 @@ class PlayerGraphics : public Graphics
   private:
     FloatRect* m_Position = nullptr;
     int m_VertexStartIndex = -999;
+
+    Animator* m_Animator;
 
 
     IntRect* m_SectionToDraw = new IntRect;

@@ -1,0 +1,17 @@
+SRC_FILES = \
+   Factory\
+   Graphics\
+   InputReceiver\
+   PlayerGraphics\
+   GameObject\
+   InputDispatcher\
+   LevelUpdate\
+   PlayerUpdate\
+   SoundEngine\
+   Update\
+   CameraGraphics\
+   CameraUpdate\
+   run\
+   PlatformGraphics\
+   PlatformUpdate\
+   Animator\
