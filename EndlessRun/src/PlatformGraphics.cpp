@@ -31,5 +31,5 @@ void PlatformGraphics::assemble(VertexArray& canvas, shared_ptr<Update> genericU
   canvas[m_VertexStartIndex + 2].texCoords.x = uPos + texWidth;
   canvas[m_VertexStartIndex + 2].texCoords.y = vPos + texHeight;
   canvas[m_VertexStartIndex + 3].texCoords.x = uPos;
-  canvas[m_VertexStartIndex + 3].texCoords.y = uPos + texHeight;
+  canvas[m_VertexStartIndex + 3].texCoords.y = vPos + texHeight;
 }

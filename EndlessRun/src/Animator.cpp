@@ -11,12 +11,20 @@ Animator::Animator(
   m_LeftOffset = leftOffset;
   m_CurrentFrame = 0;
   m_FrameCount = frameCount;
+  if(m_FrameCount == 0)
+  {
+    m_FrameCount = 1;
+  }
   m_FrameWidth = (float)textureWidth / m_FrameCount;
   m_SourceRect.left = leftOffset;
   m_SourceRect.top = topOffset;
   m_SourceRect.width = m_FrameWidth;
   m_SourceRect.height = textureHeight;
   m_FPS = fps;
+  if(m_FPS == 0)
+  {
+    m_FPS = 1;
+  }
   m_FramePeriod = 1000 / m_FPS;
   m_Clock.restart();
 }
