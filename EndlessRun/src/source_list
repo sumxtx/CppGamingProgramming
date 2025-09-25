@@ -15,3 +15,5 @@ SRC_FILES = \
    PlatformGraphics\
    PlatformUpdate\
    Animator\
+   MenuUpdate\
+   MenuGraphics\

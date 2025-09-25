@@ -1,3 +1,5 @@
+#include "MenuUpdate.hpp"
+#include "MenuGraphics.hpp"
 #include "Factory.hpp"
 #include "LevelUpdate.hpp"
 #include "PlayerGraphics.hpp"
@@ -126,4 +128,25 @@ void Factory::loadLevel(vector<GameObject>& gameObjects, VertexArray& canvas, In
 
   mapCamera.addComponent(mapCameraGraphics);
   gameObjects.push_back(mapCamera);
+
+  //Menu
+  GameObject menu;
+  shared_ptr<MenuUpdate> menuUpdate = make_shared<MenuUpdate>(m_Window);
+  menuUpdate->assemble(levelUpdate, playerUpdate);
+  inputDispatcher.registerNewInputReceiver(menuUpdate->getInputReceiver());
+  menu.addComponent(menuUpdate);
+  shared_ptr<MenuGraphics>menuGraphics = make_shared<MenuGraphics>();
+  menuGraphics->assemble(
+      canvas,
+      menuUpdate,
+      IntRect(
+        TOP_MENU_TEX_LEFT,
+        TOP_MENU_TEX_TOP,
+        TOP_MENU_TEX_WIDTH,
+        TOP_MENU_TEX_HEIGHT
+        )
+      );
+  menu.addComponent(menuGraphics);
+  gameObjects.push_back(menu);
+
 }
