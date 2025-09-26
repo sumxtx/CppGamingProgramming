@@ -17,3 +17,4 @@ SRC_FILES = \
    Animator\
    MenuUpdate\
    MenuGraphics\
+   RainGraphics\

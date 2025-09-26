@@ -1,3 +1,4 @@
+#include "RainGraphics.hpp"
 #include "MenuUpdate.hpp"
 #include "MenuGraphics.hpp"
 #include "Factory.hpp"
@@ -72,6 +73,32 @@ void Factory::loadLevel(vector<GameObject>& gameObjects, VertexArray& canvas, In
   gameObjects.push_back(platform);
 
   levelUpdate->addPlatformPosition(platformUpdate->getPositionPointer());
+  }
+
+  // Rain
+  int rainCoveragePerObject= 25;
+  int areaToCover = 350;
+  for(int h = -areaToCover / 2; h < areaToCover / 2; h+= rainCoveragePerObject)
+  {
+    for(int v = -areaToCover / 2; v < areaToCover / 2; v += rainCoveragePerObject)
+    {
+      GameObject rain;
+
+      shared_ptr<RainGraphics> rainGraphics = make_shared<RainGraphics>(
+          playerUpdate->getPositionPointer(), h, v, rainCoveragePerObject);
+
+      rainGraphics->assemble(
+          canvas,
+          nullptr,
+          IntRect(
+            RAIN_TEX_LEFT,
+            RAIN_TEX_TOP,
+            RAIN_TEX_WIDTH,
+            RAIN_TEX_HEIGHT)
+          );
+      rain.addComponent(rainGraphics);
+      gameObjects.push_back(rain);
+    }
   }
 
   //Cameras
