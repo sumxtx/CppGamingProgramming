@@ -1,0 +1,3 @@
+- Add Boost Bar
+- Make platforms fall instead of simply disappear
+- When player falls it takes too long to game over, he should di faster
