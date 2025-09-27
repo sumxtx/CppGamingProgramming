@@ -1,3 +1,9 @@
+## Project 1
+### TimberMan clone
+
+Chop the trees before the time finishes and be careful to not get smashed by a branch
+
+https://github.com/user-attachments/assets/3e3f6d5d-1916-43ef-a8a8-eda8cdd531fc
 
 
 ## Project 3
