@@ -9,7 +9,6 @@ void LevelUpdate::assemble(shared_ptr<LevelUpdate> levelUpdate,
     shared_ptr<PlayerUpdate > playerUpdate)
 {
   m_PlayerPosition = playerUpdate->getPositionPointer();
-  SoundEngine::startMusic();
 }
 
 void LevelUpdate::connectToCameraTime(float* cameraTime)
@@ -120,7 +119,7 @@ void LevelUpdate::update(float timeSinceLastUpdate)
       m_IsPaused = true;
       m_GameOver = true;
 
-      SoundEngine::pauseMusic;
+      SoundEngine::pauseMusic();
     }
   }
 }
