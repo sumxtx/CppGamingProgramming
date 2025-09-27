@@ -10,6 +10,8 @@
 #include "CameraGraphics.hpp"
 #include "PlatformUpdate.hpp"
 #include "PlatformGraphics.hpp"
+#include "FireballUpdate.hpp"
+#include "FireballGraphics.hpp"
 #include <iostream>
 
 using namespace std;
@@ -51,7 +53,7 @@ void Factory::loadLevel(vector<GameObject>& gameObjects, VertexArray& canvas, In
   levelUpdate->assemble(nullptr, playerUpdate);
 
   //Platforms
-  for(int i = 0; i < 8; i++)
+  for(int i = 0; i < 16; i++)
   {
     GameObject platform;
     shared_ptr<PlatformUpdate> platformUpdate = make_shared<PlatformUpdate>();
@@ -74,6 +76,26 @@ void Factory::loadLevel(vector<GameObject>& gameObjects, VertexArray& canvas, In
 
   levelUpdate->addPlatformPosition(platformUpdate->getPositionPointer());
   }
+
+ // Fireballs
+	for (int i = 0; i < 12; i++)
+	{
+		GameObject fireball;
+		shared_ptr<FireballUpdate> fireballUpdate =	make_shared<FireballUpdate>(
+				levelUpdate->getIsPausedPointer());
+
+		fireballUpdate->assemble(levelUpdate, playerUpdate);
+		fireball.addComponent(fireballUpdate);
+
+		shared_ptr<FireballGraphics> fireballGraphics = make_shared<FireballGraphics>();
+
+		fireballGraphics->assemble(canvas,
+			fireballUpdate,
+			IntRect(870, 0, 32, 32));
+
+		fireball.addComponent(fireballGraphics);
+		gameObjects.push_back(fireball);
+	}
 
   // Rain
   int rainCoveragePerObject= 25;

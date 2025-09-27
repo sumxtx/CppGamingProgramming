@@ -14,9 +14,9 @@ class PlayerUpdate : public Update
     FloatRect m_Position;
 
     bool* m_IsPaused = nullptr;
-    float m_Gravity = 165;
-    float m_RunSpeed = 150;
-    float m_BoostSpeed = 250;
+    float m_Gravity = 180;
+    float m_RunSpeed = 100;
+    float m_BoostSpeed = 200;
     InputReceiver m_InputReceiver;
     
     Clock m_JumpClock;

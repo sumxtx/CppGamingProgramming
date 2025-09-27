@@ -18,3 +18,5 @@ SRC_FILES = \
    MenuUpdate\
    MenuGraphics\
    RainGraphics\
+   FireballGraphics\
+   FireballUpdate\
