@@ -6,9 +6,9 @@ class Pickup
 {
   private:
     const int HEALTH_START_VALUE = 50;
-    const int AMMO_START_VALUE = 12;
+    const int AMMO_START_VALUE = 18;
     const int START_WAIT_TIME = 10;
-    const int START_SECONDS_TO_LIVE = 5;
+    const int START_SECONDS_TO_LIVE = 10;
 
     Sprite m_Sprite;
     IntRect m_Arena;
