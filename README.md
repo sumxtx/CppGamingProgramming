@@ -1,5 +1,5 @@
 ## Project 1
-### TimberMan clone
+### [TimberMan clone](https://github.com/sumxtx/CppGamingProgramming/tree/main/Timberman)
 
 Chop the trees before the time finishes and be careful to not get smashed by a branch
 
@@ -7,7 +7,7 @@ https://github.com/user-attachments/assets/3e3f6d5d-1916-43ef-a8a8-eda8cdd531fc
 
 
 ## Project 3
-#### Zombie Shooter
+#### [Zombie Shooter](https://github.com/sumxtx/CppGamingProgramming/tree/main/ZombieShooter)
 
 A Top View shooting game. Random kinds of zombie are spawned and start chasing the player that has to kill them.
 Ammunition is spawned along the map, and health packs. With each level until level 6 the Arena Growns in size, and also the numer of zombies.
@@ -19,7 +19,7 @@ https://github.com/user-attachments/assets/95470fee-bf07-4001-a4ef-f501b2da95ac
 
 
 ## Project 4
-#### Endless Run
+#### [Endless Run](https://github.com/sumxtx/CppGamingProgramming/tree/main/EndlessRun)
 
 A Run-Game where platforms spawn in front of the player and despawn behind. If the player is on, or has fell and is in, a despawned platform frame, is game over.
 Some fireballs also spawn in random directions in front and back towards the player, if the player is hit by a fireball, he is knocked down and fell.
